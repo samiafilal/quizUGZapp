@@ -2,9 +2,24 @@
   import { emit } from '@tauri-apps/api/event'
   import getDB from '../db'
 
-  let question: string="", answer1: string="", answer2: string="", answer3: string="", answer4: string = "" 
+  let question: string = "";
+  let answer1: string = "";
+  let answer2: string = "";
+  let answer3: string = "";
+  let answer4: string = "";
+  let difficulty: string = "facile";
+  let category: string = "Catégorie 1";
 
-  async function update(){
+  let difficulties: string[] = ["facile", "moyen", "difficile"];
+  let categories: string[] = [
+    "Catégorie 1",
+    "Catégorie 2",
+    "Catégorie 3",
+    "Catégorie 4",
+    "Catégorie 5"
+  ];
+
+  async function update() {
     const db = await getDB()
     await db.addQuestion(question, [answer1, answer2, answer3, answer4])
     const questionWithAnswers = await db.getQuestion()
@@ -12,105 +27,122 @@
   }
 </script>
 
-  <form class="questionWithAnswers" on:submit|preventDefault={update}>
-    <textarea id="update-input" placeholder="Question" bind:value={question} class="question"/>
-    <div class="flexRow">
-      <input placeholder="Answer 1" bind:value={answer1} class="answer"/>
-      <input placeholder="Answer 2" bind:value={answer2} class="answer"/>
-    </div>  
-    <div class="flexRow">
-      <input placeholder="Answer 3" bind:value={answer3} class="answer"/>
-      <input placeholder="Answer 4" bind:value={answer4} class="answer"/>
-    </div> 
-    <button type="submit">Update</button>
-  </form>
-
+<form class="questionWithAnswers" on:submit|preventDefault={update}>
+  <textarea id="update-input" placeholder="Question" bind:value={question} class="question"></textarea>
+  <div class="flexRow">
+    <input placeholder="Answer 1" bind:value={answer1} class="answer"/>
+    <input placeholder="Answer 2" bind:value={answer2} class="answer"/>
+  </div>  
+  <div class="flexRow">
+    <input placeholder="Answer 3" bind:value={answer3} class="answer"/>
+    <input placeholder="Answer 4" bind:value={answer4} class="answer"/>
+  </div>
+  <div class="flexRow">
+    <select bind:value={difficulty} class="dropdown">
+      {#each difficulties as diff}
+        <option value={diff}>{diff}</option>
+      {/each}
+    </select>
+    <select bind:value={category} class="dropdown">
+      {#each categories as cat}
+        <option value={cat}>{cat}</option>
+      {/each}
+    </select>
+  </div>
+  <button type="submit">Update</button>
+</form>
 
 <style>
-  input,
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  color: #0f0f0f;
-  background-color: #ffffff;
-  transition: border-color 0.25s;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
-}
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
 
-textarea{
-  border-radius: 8px;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  color: #6f6f6f;
-  background-color: #ffffff;
-  transition: border-color 0.25s;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
-  resize: none;
-  box-sizing: border-box;
-  caret-color: #fff;
-}
+  :root {
+    --primary-color: #1a252f;
+    --secondary-color: #34495e;
+    --accent-color: #27ae60;
+    --hover-color: #2980b9;
+    --background-gradient-start: #422c50;
+    --background-gradient-end: #4a6073;
+    --input-bg-color: #e6e6e6;
+    --input-border-color: rgba(0, 0, 0, 0.2);
+    --input-text-color: #6f6f6f;
+    --button-bg-color: #ffffff;
+    --button-text-color: #0f0f0f;
+  }
 
-button {
-  cursor: pointer;
-}
+  .questionWithAnswers {
+    border-radius: 1.5vw;
+    padding: 5%;
+    background-color: #f6f6f6;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+    margin: auto;
+    font-family: 'Montserrat', sans-serif;
+  }
 
-button:hover {
-  border-color: #396cd8;
-}
-button:active {
-  border-color: #396cd8;
-  background-color: #e8e8e8;
-}
+  .question, .answer, .dropdown {
+    background-color: var(--input-bg-color);
+    color: var(--input-text-color);
+    border-radius: 1vw;
+    border: 0.1vw solid var(--input-border-color);
+    padding: 1.5vh;
+    font-size: 1em;
+    font-weight: 500;
+    box-shadow: 0 0.2vh 0.2vh rgba(0, 0, 0, 0.2);
+    margin: 2%;
+    width: 100%;
+    box-sizing: border-box;
+  }
 
-input,
-button {
-  outline: none;
-}
+  .question {
+    text-align: center;
+    resize: none;
+    caret-color: #ffffff;
+  }
 
-.answer{
-  background-color: #e6e6e6;
-  color: #6f6f6f;
+  .flexRow {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
 
-  margin: 2%;
-  width : 100%;
-}
-.question{
-  background-color: #e6e6e6;
-  margin: 2%;
-  text-align: center;
-  width:100%;
-  display : block;
-}
-.flexRow{
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  width:100%;
-}
+  input, button, textarea, select {
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.25s, background-color 0.25s, transform 0.25s;
+  }
 
-.questionWithAnswers{
-  border-radius: 20px;
-  padding: 5%;
-  background-color: #f6f6f6;
-  display: block;
-  flex-direction: column;
-  align-items: center;
-  width:80%;
-  margin:auto;
-}
+  button {
+    border-radius: 1vw;
+    border: 0.1vw solid transparent;
+    padding: 0.6em 1.2em;
+    font-size: 1em;
+    font-weight: 500;
+    color: var(--button-text-color);
+    background-color: var(--button-bg-color);
+    box-shadow: 0 0.2vh 0.2vh rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+  }
 
-::placeholder { 
-  color: #fff; 
-  opacity: 1; 
-}
+  button:hover {
+    border-color: var(--hover-color);
+    background-color: #e8e8e8;
+  }
+
+  button:active {
+    border-color: var(--hover-color);
+    background-color: #e8e8e8;
+  }
+
+  ::placeholder {
+    color: var(--input-text-color);
+    opacity: 1;
+  }
+
+  select{
+    height : 3.5vh
+  }
 </style>
-
-

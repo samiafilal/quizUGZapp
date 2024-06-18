@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@tauri-apps/api": "^1",
+    "svelte-multiselect": "^10.3.0",
     "tauri-plugin-sql-api": "github:tauri-apps/tauri-plugin-sql#v1"
   },
   "devDependencies": {

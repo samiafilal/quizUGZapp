@@ -72,31 +72,20 @@
         height: auto;
         padding: 2vh;
         background-color: #1a252f;
-        border-radius: 15vw;
         box-shadow: 0 0 2vh rgba(0, 0, 0, 0.1);
         animation: fadeIn 1s ease-in-out; /* Animation d'apparition */
         overflow: hidden; /* Ajouté pour masquer le pseudo-élément débordant */
     }
 
-    .questionWithAnswers::before {
-        content: "";
-        position: absolute;
-        top: -1vh;
-        left: -1vw;
-        right: -1vw;
-        bottom: -1vh;
-        border-radius: inherit;
-        background: linear-gradient(135deg, var(--background-gradient-start), var(--background-gradient-end));
-        z-index: -1;
-    }
+    
 
     .question {
+        white-space: pre-wrap;
         color: #ffffff; /* Texte blanc */
         width: 100%;
         padding: 1.5vh;
         border: 0.1vh solid var(--primary-color);
         border-radius: 1vw;
-        margin-bottom: 2vh;
         font-size: 1.45vw;
         text-align: center;
         background-color: var(--secondary-color);

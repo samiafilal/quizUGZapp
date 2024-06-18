@@ -2,7 +2,7 @@ import Database from "tauri-plugin-sql-api";
 import { invoke } from '@tauri-apps/api/tauri'
 
 
-let dbSQL: Database;
+let dbSQL: Database | void
 
 
 type SqliteQuestionWithAnswers = {
@@ -23,17 +23,19 @@ function deserializeQuestionWithAnswers(serializedQuestionWithAnswers: string){
 
 export default async function getDB(){
     let db: {[key: string]: {question: string, answers: string[]}} = {}
-    await invoke("create_db_if_no_db")
-    const dbSQL = await Database.load("sqlite:main.sqlite").catch((e) => {
-        console.error(e);
-        return
-    });
+    if(!dbSQL){
+        await invoke("create_db_if_no_db")
+        dbSQL = await Database.load("sqlite:main.sqlite").catch((e) => {
+            console.error(e);
+            return
+        });
+    }
     const getQuestion = async () => {
             const result : SqliteQuestionWithAnswers[] = (dbSQL && await dbSQL.select(
                     "SELECT * FROM questions"
                 ) as SqliteQuestionWithAnswers[]) ?? [];
             console.log(result[0].question)
-            return deserializeQuestionWithAnswers(result[0].question)
+            return deserializeQuestionWithAnswers(result[result.length -1].question)
     };
      const addQuestion = async (question: string, answers: string[]) => {
             const serializedQuestionWithAnswers = serializeQuestionWithAnswers(question, answers)
