@@ -42,38 +42,32 @@
    width : 100%;
    height : 100%;
    display: flex;
-    background: linear-gradient(90deg, var(--background-gradient-start), var(--background-gradient-end));
     flex-direction: column;
   }
   #row1{
    width : 100%;
    height: 90%;
    display: flex;
-    background: linear-gradient(90deg, var(--background-gradient-start), var(--background-gradient-end));
     flex-direction: row;
   }
   #column2{
    width : 90%;
    height : 100%;
    display: flex;
-    background: linear-gradient(90deg, var(--background-gradient-start), var(--background-gradient-end));
     flex-direction: column;
   }
   #row2{
    width : 100%;
    height: 60%;
    display: flex;
-    background: linear-gradient(90deg, var(--background-gradient-start), var(--background-gradient-end));
     flex-direction: row;
   }
   .row {
     display: flex;
-    background: linear-gradient(90deg, var(--background-gradient-start), var(--background-gradient-end));
     flex-direction: row;
   } 
   .column {
     display: flex;
-    background: linear-gradient(90deg, var(--background-gradient-start), var(--background-gradient-end));
     flex-direction: column;
   } 
 

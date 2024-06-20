@@ -2,7 +2,7 @@
 </script>
 
 <div id="container">
-  <h1>E</h1>
+  <h1>Musique</h1>
 </div>
 
 <style>
@@ -15,7 +15,6 @@
         height: 100%;
         margin : auto;
         padding : 0;
-        background: linear-gradient(90deg, var(--background-gradient-start), var(--background-gradient-end)); /* Dégradé d'arrière-plan foncé */
         font-family: 'Montserrat', sans-serif; /* Choix de police */
     }
 </style>

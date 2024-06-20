@@ -7,10 +7,10 @@
   let answer2: string = "";
   let answer3: string = "";
   let answer4: string = "";
-  let difficulty: string = "facile";
+  let difficulty: string = "Facile";
   let category: string = "Catégorie 1";
 
-  let difficulties: string[] = ["facile", "moyen", "difficile"];
+  let difficulties: string[] = ["Facile", "Moyenne", "Difficile"];
   let categories: string[] = [
     "Catégorie 1",
     "Catégorie 2",
@@ -30,12 +30,12 @@
 <form class="questionWithAnswers" on:submit|preventDefault={update}>
   <textarea id="update-input" placeholder="Question" bind:value={question} class="question"></textarea>
   <div class="flexRow">
-    <input placeholder="Answer 1" bind:value={answer1} class="answer"/>
-    <input placeholder="Answer 2" bind:value={answer2} class="answer"/>
+    <input placeholder="A" bind:value={answer1} class="answer"/>
+    <input placeholder="B" bind:value={answer2} class="answer"/>
   </div>  
   <div class="flexRow">
-    <input placeholder="Answer 3" bind:value={answer3} class="answer"/>
-    <input placeholder="Answer 4" bind:value={answer4} class="answer"/>
+    <input placeholder="C" bind:value={answer3} class="answer"/>
+    <input placeholder="D" bind:value={answer4} class="answer"/>
   </div>
   <div class="flexRow">
     <select bind:value={difficulty} class="dropdown">
@@ -49,7 +49,7 @@
       {/each}
     </select>
   </div>
-  <button type="submit">Update</button>
+  <button type="submit">Sauver</button>
 </form>
 
 <style>
@@ -72,7 +72,7 @@
   .questionWithAnswers {
     border-radius: 1.5vw;
     padding: 5%;
-    background-color: #f6f6f6;
+    background-color: #f6f6f600;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -98,7 +98,7 @@
   .question {
     text-align: center;
     resize: none;
-    caret-color: #ffffff;
+    caret-color:var(--input-text-color);
   }
 
   .flexRow {

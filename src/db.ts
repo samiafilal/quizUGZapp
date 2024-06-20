@@ -7,7 +7,8 @@ let dbSQL: Database | void
 
 type SqliteQuestionWithAnswers = {
     id : number,
-    question: string
+    question: string,
+    category : string,
 }
 
 function serializeQuestionWithAnswers(question: string, answers: string[]){
@@ -22,7 +23,6 @@ function deserializeQuestionWithAnswers(serializedQuestionWithAnswers: string){
 
 
 export default async function getDB(){
-    let db: {[key: string]: {question: string, answers: string[]}} = {}
     if(!dbSQL){
         await invoke("create_db_if_no_db")
         dbSQL = await Database.load("sqlite:main.sqlite").catch((e) => {
@@ -37,7 +37,7 @@ export default async function getDB(){
             console.log(result[0].question)
             return deserializeQuestionWithAnswers(result[result.length -1].question)
     };
-     const addQuestion = async (question: string, answers: string[]) => {
+     const addQuestion = async (question: string, answers: string[], category: string) => {
             const serializedQuestionWithAnswers = serializeQuestionWithAnswers(question, answers)
             console.log(serializedQuestionWithAnswers)
             const result = dbSQL && await dbSQL.execute(
@@ -47,6 +47,7 @@ export default async function getDB(){
                     console.error(e);
             });
     };
+
     const result = {getQuestion, addQuestion}
     return result;
 }

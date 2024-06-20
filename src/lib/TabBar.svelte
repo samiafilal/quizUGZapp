@@ -3,12 +3,11 @@
 </script>
 
 <main id="main">
-  <h1>A</h1>
+  <h1>Contrôles</h1>
 </main>
 
 <style>
   #main {
-    border: 1px solid red;
     height:10%;
     width:100%;
     display: flex;
