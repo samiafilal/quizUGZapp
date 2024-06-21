@@ -58,10 +58,9 @@
     }
   
     .tab:hover {
-        background-color: #ffffff22;
         transform: scale(1.05);
-        margin-left: 5%;
-        width: 95%;
+        margin-left: 8%;
+        width: 92%;
     }
   
     .tab:last-child {

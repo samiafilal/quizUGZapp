@@ -21,12 +21,12 @@ async fn create_db_if_no_db(app_handle: tauri::AppHandle) -> Result<bool, String
         Sqlite::create_database(sqlite_path).await.unwrap();
         let pool= sqlx::sqlite::SqlitePool::connect(sqlite_path).await.unwrap();
         //create a table named questions with id and question columns, an integer for the difficulty and a foreign key to the categories table
-        sqlx::query("CREATE TABLE questions (id INTEGER PRIMARY KEY, question TEXT, difficulty INTEGER, category_id INTEGER, FOREIGN KEY(category_id) REFERENCES categories(id))")
+        sqlx::query("CREATE TABLE questions (id INTEGER PRIMARY KEY, question TEXT, answer1 TEXT, answer2 TEXT, answer3 TEXT, answer4 TEXT, correct_answer INTEGER,
+            difficulty INTEGER, category_id INTEGER, favorite INTEGER, FOREIGN KEY(category_id) REFERENCES categories(id))")
             .execute(&pool).await.unwrap();
         //create a table named categories with id and category columns
         sqlx::query("CREATE TABLE categories (id INTEGER PRIMARY KEY, category TEXT)")
             .execute(&pool).await.unwrap();
-
     }
     Result::Ok(true)
 }
