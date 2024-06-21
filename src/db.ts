@@ -34,17 +34,25 @@ export default async function getDB(){
         const categoryId = categoryIdArray && categoryIdArray.length > 0 && categoryIdArray[0] && categoryIdArray[0].id
         if(!categoryId){
             await addCategory(question.category)
-            setTimeout(() => addQuestion(question), 100)
+            addQuestion(question)
             return
         }
         const result = dbSQL && await dbSQL.execute(
-            "INSERT INTO questions (question, answer1, answer2, answer3, answer4, correct_answer, category_id, difficulty) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
-            [question.question, question.answer1, question.answer2, question.answer3, question.answer4, question.correct_answer, categoryId, question.difficulty],
+            "INSERT INTO questions (question, answer1, answer2, answer3, answer4, correct_answer, category_id, difficulty, favorite) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)",
+            [question.question, question.answer1, question.answer2, question.answer3, question.answer4, question.correct_answer, categoryId, question.difficulty, question.favorite],
         ).catch((e) => {
             console.error(e);
         });
-        console.log(result)
         return result
+    }
+
+    const getAllCategories = async () => {
+        const result = dbSQL && await dbSQL.select(
+            "SELECT * FROM categories",
+        ).catch((e) => {
+            console.error(e);
+        }) as {category : string}[];
+        return result ? result.map((category: { category: string; }) => category.category) : []
     }
 
 
@@ -84,12 +92,12 @@ export default async function getDB(){
         ).catch((e) => {
             console.error(e);
         }) as Question[];
-        console.log(result)
+        console.table(result)
         return result
     }
 
             
 
-    const result = {addQuestion,searchInQuestionsAndAnswersFilteredByCategoryAndDifficulty}
+    const result = {addQuestion,searchInQuestionsAndAnswersFilteredByCategoryAndDifficulty,getAllCategories}
     return result;
 }

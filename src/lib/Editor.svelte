@@ -33,7 +33,7 @@ let mockQuestions : Question[] =
         "correct_answer": 1,
         "category": "Sport",
         "difficulty": 1,
-        "favorite": false
+        "favorite": 0
     },
     {
         "id": 2,
@@ -45,7 +45,7 @@ let mockQuestions : Question[] =
         "correct_answer": 1,
         "category": "Musique",
         "difficulty": 2,
-        "favorite": true
+        "favorite": 1
     },
     {
         "id": 3,
@@ -57,7 +57,7 @@ let mockQuestions : Question[] =
         "correct_answer": 0,
         "category": "Histoire",
         "difficulty": 1,
-        "favorite": false
+        "favorite": 0
     },
     {
         "id": 4,
@@ -69,7 +69,7 @@ let mockQuestions : Question[] =
         "correct_answer": 2,
         "category": "Sciences",
         "difficulty": 0,
-        "favorite": true
+        "favorite": 1
     },
     {
         "id": 5,
@@ -81,7 +81,7 @@ let mockQuestions : Question[] =
         "correct_answer": 3,
         "category": "Cinéma",
         "difficulty": 1,
-        "favorite": false
+        "favorite": 0
     },
     {
         "id": 6,
@@ -93,7 +93,7 @@ let mockQuestions : Question[] =
         "correct_answer": 2,
         "category": "Sport",
         "difficulty": 0,
-        "favorite": true
+        "favorite": 1
     },
     {
         "id": 7,
@@ -105,7 +105,7 @@ let mockQuestions : Question[] =
         "correct_answer": 2,
         "category": "Histoire",
         "difficulty": 0,
-        "favorite": false
+        "favorite": 0
     },
     {
         "id": 8,
@@ -117,7 +117,7 @@ let mockQuestions : Question[] =
         "correct_answer": 1,
         "category": "Musique",
         "difficulty": 0,
-        "favorite": true
+        "favorite": 1
     },
     {
         "id": 9,
@@ -129,7 +129,7 @@ let mockQuestions : Question[] =
         "correct_answer": 0,
         "category": "Sciences",
         "difficulty": 0,
-        "favorite": false
+        "favorite": 0
     },
     {
         "id": 10,
@@ -141,7 +141,7 @@ let mockQuestions : Question[] =
         "correct_answer": 0,
         "category": "Cinéma",
         "difficulty": 2,
-        "favorite": true
+        "favorite": 1
     },
     {
         "id": 11,
@@ -153,7 +153,7 @@ let mockQuestions : Question[] =
         "correct_answer": 3,
         "category": "Sciences",
         "difficulty": 1,
-        "favorite": false
+        "favorite": 0
     },
     {
         "id": 12,
@@ -165,7 +165,7 @@ let mockQuestions : Question[] =
         "correct_answer": 0,
         "category": "Musique",
         "difficulty": 2,
-        "favorite": true
+        "favorite": 1
     },
     {
         "id": 13,
@@ -177,7 +177,7 @@ let mockQuestions : Question[] =
         "correct_answer": 0,
         "category": "Histoire",
         "difficulty": 1,
-        "favorite": false
+        "favorite": 0
     },
     {
         "id": 14,
@@ -189,7 +189,7 @@ let mockQuestions : Question[] =
         "correct_answer": 0,
         "category": "Sciences",
         "difficulty": 2,
-        "favorite": true
+        "favorite": 1
     },
     {
         "id": 15,
@@ -201,7 +201,7 @@ let mockQuestions : Question[] =
         "correct_answer": 1,
         "category": "Cinéma",
         "difficulty": 0,
-        "favorite": false
+        "favorite": 0
     },
     {
         "id": 16,
@@ -213,7 +213,7 @@ let mockQuestions : Question[] =
         "correct_answer": 0,
         "category": "Sport",
         "difficulty": 0,
-        "favorite": true
+        "favorite": 1
     },
     {
         "id": 17,
@@ -225,7 +225,7 @@ let mockQuestions : Question[] =
         "correct_answer": 0,
         "category": "Musique",
         "difficulty": 1,
-        "favorite": false
+        "favorite": 0
     },
     {
         "id": 18,
@@ -237,7 +237,7 @@ let mockQuestions : Question[] =
         "correct_answer": 2,
         "category": "Histoire",
         "difficulty": 0,
-        "favorite": true
+        "favorite": 1
     },
     {
         "id": 19,
@@ -249,7 +249,7 @@ let mockQuestions : Question[] =
         "correct_answer": 1,
         "category": "Sciences",
         "difficulty": 0,
-        "favorite": false
+        "favorite": 0
     },
     {
         "id": 20,
@@ -261,7 +261,7 @@ let mockQuestions : Question[] =
         "correct_answer": 1,
         "category": "Cinéma",
         "difficulty": 1,
-        "favorite": true
+        "favorite": 1
     },
     {
         "id": 21,
@@ -273,7 +273,7 @@ let mockQuestions : Question[] =
         "correct_answer": 2,
         "category": "Sport",
         "difficulty": 0,
-        "favorite": false
+        "favorite": 0
     },
     {
         "id": 22,
@@ -285,7 +285,7 @@ let mockQuestions : Question[] =
         "correct_answer": 1,
         "category": "Histoire",
         "difficulty": 0,
-        "favorite": true
+        "favorite": 1
     },
     {
         "id": 23,
@@ -297,7 +297,7 @@ let mockQuestions : Question[] =
         "correct_answer": 0,
         "category": "Sciences",
         "difficulty": 1,
-        "favorite": false
+        "favorite": 0
     },
     {
         "id": 24,
@@ -309,7 +309,7 @@ let mockQuestions : Question[] =
         "correct_answer": 0,
         "category": "Musique",
         "difficulty": 1,
-        "favorite": true
+        "favorite": 1
     },
     {
         "id": 25,
@@ -321,7 +321,7 @@ let mockQuestions : Question[] =
         "correct_answer": 2,
         "category": "Cinéma",
         "difficulty": 2,
-        "favorite": false
+        "favorite": 0
     },
     {
         "id": 26,
@@ -333,7 +333,7 @@ let mockQuestions : Question[] =
         "correct_answer": 2,
         "category": "Histoire",
         "difficulty": 0,
-        "favorite": true
+        "favorite": 1
     },
     {
         "id": 27,
@@ -345,7 +345,7 @@ let mockQuestions : Question[] =
         "correct_answer": 1,
         "category": "Sciences",
         "difficulty": 0,
-        "favorite": false
+        "favorite": 0
     },
     {
         "id": 28,
@@ -357,7 +357,7 @@ let mockQuestions : Question[] =
         "correct_answer": 2,
         "category": "Musique",
         "difficulty": 0,
-        "favorite": true
+        "favorite": 1
     },
     {
         "id": 29,
@@ -369,7 +369,7 @@ let mockQuestions : Question[] =
         "correct_answer": 2,
         "category": "Histoire",
         "difficulty": 1,
-        "favorite": false
+        "favorite": 0
     },
     {
         "id": 30,
@@ -381,7 +381,7 @@ let mockQuestions : Question[] =
         "correct_answer": 1,
         "category": "Cinéma",
         "difficulty": 2,
-        "favorite": true
+        "favorite": 1
     }
 ]
 
