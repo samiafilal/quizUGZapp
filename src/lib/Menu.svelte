@@ -2,7 +2,6 @@
     import { emit } from '@tauri-apps/api/event'
     export let tabs = [
         { name: "File", icon: "fa-clock" , id: "Queue" },
-        { name: "Recherche", icon: "fa-search", id: "Search" },
         { name: "Favoris", icon: "fa-star", id: "Favorites"},
         { name: "Historique", icon: "fa-history", id: "History"},
         { name: "Questions", icon: "fa-th-list", id: "Library" },

@@ -1,8 +1,9 @@
 <script lang="ts">
   import Editor from "./Editor.svelte";
   import Library from "./Library.svelte";
-  import { listen } from '@tauri-apps/api/event';
+  import Queue from "./Queue.svelte";
 
+  import { listen } from '@tauri-apps/api/event';
   let selectedTab: string = "Library";
 
   function selectTab(tab: string) {
@@ -19,6 +20,8 @@
     <Editor />
   {:else if selectedTab === "Library"}
     <Library />
+  {:else if selectedTab === "Queue"}
+    <Queue/>
   {/if}
 </div>
 
