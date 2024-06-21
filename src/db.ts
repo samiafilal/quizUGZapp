@@ -43,7 +43,15 @@ export default async function getDB(){
         ).catch((e) => {
             console.error(e);
         });
-        return result
+        }
+
+    const deleteQuestion = async (question : Question) => {
+        const result = dbSQL && await dbSQL.execute(
+            "DELETE FROM questions WHERE id = $1",
+            [question.id],
+        ).catch((e) => {
+            console.error(e);
+        });
     }
 
     const getAllCategories = async () => {
@@ -56,7 +64,7 @@ export default async function getDB(){
     }
 
 
-    const searchInQuestionsAndAnswersFilteredByCategoryAndDifficulty = async (searchString : string, category : string, difficulty : number, offset: number) => {
+    const searchInQuestionsAndAnswersFilteredByCategoryAndDifficulty = async (searchString : string, category : string, difficulty : number, offset: number, count: number = 10) => {
         const categoryIdArray = dbSQL && await dbSQL.select(
             "SELECT id FROM categories WHERE category = $1",
             [category],
@@ -83,7 +91,7 @@ export default async function getDB(){
             SQLQuery += `AND difficulty = $${argIdx.toString()} `
             SQLQueryArgs.push(difficulty)
         }
-        SQLQuery += "ORDER BY question ASC LIMIT 10 OFFSET " + offset.toString()
+        SQLQuery += `ORDER BY question ASC LIMIT ${count} OFFSET ` + offset.toString()
         console.log(SQLQuery)
         console.log(SQLQueryArgs)
         const result = dbSQL && await dbSQL.select(
@@ -98,6 +106,6 @@ export default async function getDB(){
 
             
 
-    const result = {addQuestion,searchInQuestionsAndAnswersFilteredByCategoryAndDifficulty,getAllCategories}
+    const result = {addQuestion,searchInQuestionsAndAnswersFilteredByCategoryAndDifficulty,getAllCategories,deleteQuestion}
     return result;
 }
