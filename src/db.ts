@@ -64,7 +64,8 @@ export default async function getDB(){
     }
 
 
-    const searchInQuestionsAndAnswersFilteredByCategoryAndDifficulty = async (searchString : string, category : string, difficulty : number, offset: number, count: number = 10) => {
+
+    const searchInQuestionsAndAnswersFilteredByCategoryAndDifficulty = async (searchString : string, category : string, difficulty : number, offset: number, count: number) => {
         const categoryIdArray = dbSQL && await dbSQL.select(
             "SELECT id FROM categories WHERE category = $1",
             [category],
@@ -73,9 +74,8 @@ export default async function getDB(){
         }) as {id : number}[];
         const categoryId = categoryIdArray && categoryIdArray.length > 0 && categoryIdArray[0] && categoryIdArray[0].id
         console.log(difficulty)
-        offset = offset * 10
         let argIdx = 1
-        let SQLQuery = "SELECT * FROM questions WHERE 1=1 " +
+        let SQLQuery = "SELECT questions.id, question, answer1, answer2, answer3, answer4, correct_answer, category, difficulty, favorite FROM questions JOIN categories ON questions.category_id = categories.id WHERE 1=1 " +
         (searchString.length > 0 ? `AND (question LIKE $${argIdx} OR answer1 LIKE $${argIdx} OR answer2 LIKE $${argIdx} OR ANSWER3 LIKE $${argIdx} OR ANSWER4 LIKE $${argIdx})` : "") 
         let SQLQueryArgs : any[] = []
         if(searchString.length > 0){

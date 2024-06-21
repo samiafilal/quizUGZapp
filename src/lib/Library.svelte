@@ -5,12 +5,10 @@
   import getQueue from '../queue';
   let queue: Queue;
   let db: DB;
-  let dbOffset = 0;
   let searchQuery = "";
   let selectedDifficulty = "Toutes";
   let selectedCategory = "Toutes";
   let container: HTMLDivElement;
-
   let difficulties = ["Toutes", "Facile", "Moyen", "Difficile"];
   const difficultyAsNumber = {
     "Facile": 0,
@@ -34,25 +32,25 @@
 
   function deleteQuestion(question: Question) {
     db.deleteQuestion(question).then(() => {
-      db.searchInQuestionsAndAnswersFilteredByCategoryAndDifficulty(
-        searchQuery,
-        selectedCategory,
-        difficultyAsNumber[selectedDifficulty as keyof typeof difficultyAsNumber],
-        dbOffset,1
-      ).then((returnedQuestions) => {
-        questions = [...questions, ...returnedQuestions].filter((q) => q.id !== question.id);
-      });
-    });
+      questions = questions.filter((q) => q.id !== question.id);
+        db.searchInQuestionsAndAnswersFilteredByCategoryAndDifficulty(
+          searchQuery,
+          selectedCategory,
+          difficultyAsNumber[selectedDifficulty as keyof typeof difficultyAsNumber],
+          questions.length,1
+        ).then((returnedQuestions) => {
+          questions = [...questions, ...returnedQuestions];
+        });
+    })
   }
 
   function fetchMoreQuestions() {
     const category = selectedCategory === "Toutes" ? "" : selectedCategory;
-    dbOffset += 1;
     db.searchInQuestionsAndAnswersFilteredByCategoryAndDifficulty(
       searchQuery,
       selectedCategory,
       difficultyAsNumber[selectedDifficulty as keyof typeof difficultyAsNumber],
-      dbOffset
+      questions.length,10
     ).then((returnedQuestions) => {
       questions = [...questions, ...returnedQuestions];
     });
@@ -60,12 +58,11 @@
 
   function filtersChanged() {
     const category = selectedCategory === "Toutes" ? "" : selectedCategory;
-    dbOffset = 0;
     db.searchInQuestionsAndAnswersFilteredByCategoryAndDifficulty(
       searchQuery,
       selectedCategory,
       difficultyAsNumber[selectedDifficulty as keyof typeof difficultyAsNumber],
-      dbOffset
+      0,10
     ).then((returnedQuestions) => {
       questions = returnedQuestions ?? [];
     });
@@ -111,7 +108,7 @@
         searchQuery,
         selectedCategory,
         difficultyAsNumber[selectedDifficulty as keyof typeof difficultyAsNumber],
-        0
+        0,10
       ).then((returnedQuestions) => {
         questions = returnedQuestions ?? [];
       });

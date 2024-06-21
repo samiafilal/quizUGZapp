@@ -13,13 +13,14 @@ export type Question = {
 
 export type DB = {
     addQuestion : (question : Question) => Promise<void>,
-    searchInQuestionsAndAnswersFilteredByCategoryAndDifficulty : (searchString : string, category : string, difficulty : number, offset: number, count?: number) => Promise<Question[]>,
+    searchInQuestionsAndAnswersFilteredByCategoryAndDifficulty : (searchString : string, category : string, difficulty : number, offset: number, count: number) => Promise<Question[]>,
     getAllCategories : () => Promise<string[]>,
     deleteQuestion : (question : Question) => Promise<void>
 }
 
 export type Queue = { 
-    getQuestions: (offset : number, count? : number) => Question[]; 
+    getQuestions: (offset : number, count : number) => Question[]; 
     addQuestion: (question: Question) => void; 
     deleteQuestion: (question: Question) => void;
+    getCurrentQuestion: () => Question | undefined;
 };

@@ -6,7 +6,6 @@
 
   let queue: Queue;
   let container: HTMLDivElement;
-  let offset = 0;
   
   let questions = [] as Question[];
 
@@ -15,13 +14,13 @@
  
 
   function fetchMoreQuestions() {
-    offset += 1;
-    questions = [...questions, ...queue.getQuestions(offset)];
+    questions = [...questions, ...queue.getQuestions(questions.length,10)];
   }
 
   function deleteQuestion(question: Question) {
     queue.deleteQuestion(question);
-    questions = [...questions, ...queue.getQuestions(offset,1)].filter((q) => q.id !== question.id);
+    questions = questions.filter((q) => q.id !== question.id);
+    questions = [...questions, ...queue.getQuestions(questions.length,1)];
   }
 
   
@@ -45,7 +44,7 @@
 
   onMount(() => {
     queue = getQueue();
-    questions = queue.getQuestions(0);
+    questions = queue.getQuestions(0,10);
     container.addEventListener('scroll', handleScroll);
     return () => {
       container.removeEventListener('scroll', handleScroll);
