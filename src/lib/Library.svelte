@@ -8,7 +8,7 @@
   let searchQuery = "";
   let selectedDifficulty = "Toutes";
   let selectedCategory = "Toutes";
-  let container: HTMLDivElement;
+  let questionsList: HTMLDivElement;
   let difficulties = ["Toutes", "Facile", "Moyen", "Difficile"];
   const difficultyAsNumber = {
     "Facile": 0,
@@ -80,7 +80,7 @@
 
   let scrollTimer: number | undefined;
   function handleScroll() {
-    if (container.scrollTop + container.clientHeight >= container.scrollHeight) {
+    if (questionsList.scrollTop + questionsList.clientHeight >= questionsList.scrollHeight) {
       if (scrollTimer) {
         clearTimeout(scrollTimer);
       }
@@ -114,9 +114,9 @@
       });
     });
 
-    container.addEventListener('scroll', handleScroll);
+    questionsList.addEventListener('scroll', handleScroll);
     return () => {
-      container.removeEventListener('scroll', handleScroll);
+      questionsList.removeEventListener('scroll', handleScroll);
     };
   });
 </script>
@@ -147,13 +147,11 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
-    height: 80vh; /* Set height for scrollable area */
+    height:100%;
     margin: auto;
-    padding: 2rem;
     background-color: var(--background-color-dark);
     border-radius: 1.5vw;
     font-family: 'Montserrat', sans-serif;
-    overflow-y: auto; /* Enable vertical scrolling */
   }
 
   .search-container, .filter-container {
@@ -199,6 +197,8 @@
 
   .question-list {
     width: 100%;
+    overflow-y: auto; /* Enable vertical scrolling */
+
   }
 
   .question-item {
@@ -258,7 +258,7 @@
   }
 </style>
 
-<div class="container" bind:this={container}>
+<div class="container">
   <div class="search-container">
     <input type="text" placeholder="Search..." bind:value={searchQuery} on:change={queryChanged} on:keyup={queryChanged} />
     <i class="fa fa-search search-icon"></i>
@@ -275,7 +275,7 @@
       {/each}
     </select>
   </div>
-  <div class="question-list">
+  <div class="question-list" bind:this={questionsList}>
     {#each questions as question}
       <div class="question-item">
         <div class="info">
