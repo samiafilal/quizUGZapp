@@ -23,6 +23,9 @@
       "shell": {
         "all": false,
         "open": true
+      },
+      "window":{
+        "create": true
       }
     },
     "windows": [
@@ -30,13 +33,6 @@
         "title": "Admin",
         "label": "Admin",
         "url":"index.html",
-        "width": 800,
-        "height": 600
-      },
-      {
-        "title": "Screen",
-        "label": "Screen",
-        "url":"index_screen.html",
         "width": 800,
         "height": 600
       }

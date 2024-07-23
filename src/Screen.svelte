@@ -6,7 +6,6 @@
 
 <main class="container">
     <CreateTeam/>
-    <i class="fas fa-expand expand-icon"></i> <!-- Font Awesome expand icon -->
 </main>
 
 <style>
@@ -19,15 +18,7 @@
         height: 100%;
         margin: auto;
         padding: 0;
-        font-family: 'Montserrat', sans-serif; /* Choix de police */
-        position: relative; /* Make the container the reference for absolute positioning */
+        font-family: 'Montserrat', sans-serif; 
     }
-    .expand-icon {
-        position: absolute;
-        top: 10px; /* Adjust as needed */
-        right: 10px; /* Adjust as needed */
-        font-size: 24px; /* Adjust as needed */
-        color: #000; /* Adjust as needed */
-        cursor: pointer;
-    }
+   
 </style>
