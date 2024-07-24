@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
   import { onMount } from 'svelte';
   import type { Question, Queue } from "../types";
   import getQueue from '../queue';
   import { listen } from '@tauri-apps/api/event';
+  import { emit } from '@tauri-apps/api/event'
 
   let queue: Queue;
   let currentQuestion = "";
@@ -12,9 +12,11 @@
 
 
   function next() {
+    emit("tab_bar_next");
   }
 
   function previous() {
+    emit("tab_bar_previous");
   }
 
   listen("question_added_to_queue", (event) => {

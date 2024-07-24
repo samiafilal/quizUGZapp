@@ -5,9 +5,30 @@ use sqlx::migrate::MigrateDatabase;
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 
 use std::string::String;
+use std::sync::Mutex;
+
+struct Phase {
+    phase: Mutex<i32>,
+}
+use tauri::State;
 
 
+#[tauri::command]
+fn phase(method: &str, state: State<Phase>) -> i32 {
+    let mut phase = state.phase.lock().unwrap();
 
+    match method {
+        "get" => (),
+        "increment" => {
+            *phase = *phase + 1;
+        },
+        "decrement" => {
+            *phase = *phase - 1;
+        },
+        _ => ()
+    }
+    *phase
+}
 
 
 
@@ -33,8 +54,10 @@ async fn create_db_if_no_db(app_handle: tauri::AppHandle) -> Result<bool, String
 
 fn main(){
     tauri::Builder::default()
+        .manage(Phase { phase: Mutex::new(0) })
         .plugin(tauri_plugin_sql::Builder::default().build())
-        .invoke_handler(tauri::generate_handler![create_db_if_no_db])
+        .plugin(tauri_plugin_websocket::init())
+        .invoke_handler(tauri::generate_handler![create_db_if_no_db,phase])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

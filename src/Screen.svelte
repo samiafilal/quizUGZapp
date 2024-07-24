@@ -1,11 +1,32 @@
 <script lang="ts">
     import { listen } from '@tauri-apps/api/event';
     import QuestionWithAnswers from './lib/QuestionWithAnswers.svelte';
+    import { onMount } from 'svelte';
     import CreateTeam from './lib/CreateTeam.svelte';
+    import Welcome from './lib/Welcome.svelte';
+    import type { Game } from './types';
+    import getGame from './game';
+    let game : Game;
+
+    onMount(async () => {
+        game =  getGame();
+        phase = await game.getPhase();
+    });
+
+    listen('phase_updated', async (event) => {
+        phase = await game.getPhase();
+    });
+    let phase : number;
+    
+
 </script>
 
 <main class="container">
-    <CreateTeam/>
+    {#if phase == 0}
+	    <Welcome/>
+    {:else if phase == 1}
+        <CreateTeam/>
+    {/if}
 </main>
 
 <style>

@@ -11,6 +11,24 @@ export type Question = {
     favorite : number
 }
 
+export type Player = {
+    id : number,
+    name : string,
+    score : number
+}
+
+export type Team = {    
+    id : number,
+    name : string,
+    score : number,
+    players : Player[]
+}
+
+export type Game = {
+    getTeams : () => Team[],
+    getPhase : () => Promise<number>
+}
+
 export type DB = {
     addQuestion : (question : Question) => Promise<void>,
     searchInQuestionsAndAnswersFilteredByCategoryAndDifficulty : (searchString : string, category : string, difficulty : number, offset: number, count: number) => Promise<Question[]>,
