@@ -6,10 +6,11 @@
     import Welcome from './lib/Welcome.svelte';
     import type { Game } from './types';
     import getGame from './game';
+    export let master : boolean = false;
     let game : Game;
 
     onMount(async () => {
-        game =  getGame();
+        game =  await getGame(master);
         phase = await game.getPhase();
     });
 

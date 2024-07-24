@@ -26,7 +26,7 @@ export type Team = {
 
 export type Game = {
     getTeams : () => Team[],
-    getPhase : () => Promise<number>
+    getPhase : () => number,
 }
 
 export type DB = {

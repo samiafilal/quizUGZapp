@@ -13,7 +13,7 @@
 
 <div id="main">
   <button class="fas fa-expand expand-icon" on:click={() => {openWindow()}} aria-label="Expand" type="button"></button>
-  <Screen/>
+  <Screen master={true}/>
 </div>
 
 <style>
