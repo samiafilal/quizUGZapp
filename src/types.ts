@@ -27,7 +27,8 @@ export type Team = {
 
 export type Game = {
     getTeams : () => Team[],
-    getPhase : () => number,
+    getPhase : () => Promise<number>,
+    getAddTeamURL : () => Promise<string>,
 }
 
 export type DB = {
@@ -40,6 +41,8 @@ export type DB = {
 export type Queue = { 
     getQuestions: (offset : number, count : number) => Question[]; 
     addQuestion: (question: Question) => void; 
+    moveQuestionUp: (question: Question) => void; 
+    moveQuestionDown: (question: Question) => void; 
     deleteQuestion: (question: Question) => void;
     getCurrentQuestion: () => Question | undefined;
 };

@@ -10,6 +10,9 @@ use std::sync::Mutex;
 struct Phase {
     phase: Mutex<i32>,
 }
+struct AddTeamURL {
+    add_team_url: Mutex<String>,
+}
 use tauri::State;
 
 
@@ -30,6 +33,21 @@ fn phase(method: &str, state: State<Phase>) -> i32 {
     *phase
 }
 
+#[tauri::command]
+fn add_team_url(method: &str, url: &str, state: State<AddTeamURL>) -> String {
+    let mut add_team_url = state.add_team_url.lock().unwrap();
+    match method {
+        "get" => (),
+        "set" => {
+            *add_team_url = (*url).to_string();
+        },
+        _ => ()
+    }
+    (*add_team_url).clone()
+}
+
+
+
 
 
 #[tauri::command]
@@ -43,7 +61,7 @@ async fn create_db_if_no_db(app_handle: tauri::AppHandle) -> Result<bool, String
         let pool= sqlx::sqlite::SqlitePool::connect(sqlite_path).await.unwrap();
         //create a table named questions with id and question columns, an integer for the difficulty and a foreign key to the categories table
         sqlx::query("CREATE TABLE questions (id INTEGER PRIMARY KEY, question TEXT, answer1 TEXT, answer2 TEXT, answer3 TEXT, answer4 TEXT, correct_answer INTEGER,
-            difficulty INTEGER, category_id INTEGER, favorite INTEGER, FOREIGN KEY(category_id) REFERENCES categories(id))")
+            difficulty INTEGER, category_id INTEGER, favorite INTEGER, time INTEGER, FOREIGN KEY(category_id) REFERENCES categories(id))")
             .execute(&pool).await.unwrap();
         //create a table named categories with id and category columns
         sqlx::query("CREATE TABLE categories (id INTEGER PRIMARY KEY, category TEXT)")
@@ -55,9 +73,10 @@ async fn create_db_if_no_db(app_handle: tauri::AppHandle) -> Result<bool, String
 fn main(){
     tauri::Builder::default()
         .manage(Phase { phase: Mutex::new(0) })
+        .manage(AddTeamURL { add_team_url: Mutex::new("".to_string()) })
         .plugin(tauri_plugin_sql::Builder::default().build())
         .plugin(tauri_plugin_websocket::init())
-        .invoke_handler(tauri::generate_handler![create_db_if_no_db,phase])
+        .invoke_handler(tauri::generate_handler![create_db_if_no_db,phase,add_team_url])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

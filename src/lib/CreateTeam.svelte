@@ -1,5 +1,9 @@
 <script lang="ts">
+    import { onMount } from "svelte";
   import {QRCodeImage} from "svelte-qrcode-image"
+  import type { Game } from "../types";
+  export let url : string;
+  
 </script>
 
 <style>
@@ -15,5 +19,5 @@
 
 <div class="container">
     <h1>Créez votre équipe  </h1>
-    <QRCodeImage text="https://quizugz.fr/createTeam" width={300}  />
+    <QRCodeImage text={url} width={300}  />
 </div>

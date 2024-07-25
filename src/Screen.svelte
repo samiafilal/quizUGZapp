@@ -7,12 +7,16 @@
     import type { Game } from './types';
     import getGame from './game';
     export let master : boolean = false;
+    const baseURL = "https://quizugz.fr";
     let game : Game;
-    let errorMessage = ''
+    let phase : number;
+    let errorMessage = '';
+    let createTeamURL = '';
     onMount(async () => {
         getGame(master).then(async g => {
             game = g;
-            phase = game.getPhase();
+            createTeamURL = await game.getAddTeamURL();
+            phase = await game.getPhase();
         }).catch((e) => {
             errorMessage = e;
         });
@@ -21,7 +25,6 @@
     listen('phase_updated', async (event) => {
         phase = await game.getPhase();
     });
-    let phase : number;
     
 
 </script>
@@ -33,7 +36,7 @@
         {#if phase == 0}
 	        <Welcome/>
         {:else if phase == 1}
-            <CreateTeam/>
+            <CreateTeam url={baseURL+createTeamURL}/>
         {/if}
     {/if}
 

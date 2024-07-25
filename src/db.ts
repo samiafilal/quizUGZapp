@@ -38,8 +38,8 @@ export default async function getDB(){
             return
         }
         const result = dbSQL && await dbSQL.execute(
-            "INSERT INTO questions (question, answer1, answer2, answer3, answer4, correct_answer, category_id, difficulty, favorite) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)",
-            [question.question, question.answer1, question.answer2, question.answer3, question.answer4, question.correct_answer, categoryId, question.difficulty, question.favorite],
+            "INSERT INTO questions (question, answer1, answer2, answer3, answer4, correct_answer, category_id, difficulty, favorite, time) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)",
+            [question.question, question.answer1, question.answer2, question.answer3, question.answer4, question.correct_answer, categoryId, question.difficulty, question.favorite, question.time],
         ).catch((e) => {
             console.error(e);
         });
@@ -75,7 +75,7 @@ export default async function getDB(){
         const categoryId = categoryIdArray && categoryIdArray.length > 0 && categoryIdArray[0] && categoryIdArray[0].id
         console.log(difficulty)
         let argIdx = 1
-        let SQLQuery = "SELECT questions.id, question, answer1, answer2, answer3, answer4, correct_answer, category, difficulty, favorite FROM questions JOIN categories ON questions.category_id = categories.id WHERE 1=1 " +
+        let SQLQuery = "SELECT questions.id, question, answer1, answer2, answer3, answer4, correct_answer, category, difficulty, favorite, time FROM questions JOIN categories ON questions.category_id = categories.id WHERE 1=1 " +
         (searchString.length > 0 ? `AND (question LIKE $${argIdx} OR answer1 LIKE $${argIdx} OR answer2 LIKE $${argIdx} OR ANSWER3 LIKE $${argIdx} OR ANSWER4 LIKE $${argIdx})` : "") 
         let SQLQueryArgs : any[] = []
         if(searchString.length > 0){
