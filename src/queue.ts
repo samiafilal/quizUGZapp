@@ -15,18 +15,33 @@ export default function getQueue(){
     const addQuestion = (question : Question) => {
         if(!queue.find(q => q === question)){
             queue.push(question);
-            if(queue.length === 1)
-                emit("question_added_to_queue")
+            emit("updated_queue")
         }
     }
     const deleteQuestion = (question : Question) => {
         queue = queue.filter(q => q !== question)
-        emit("question_deleted_from_queue")
+        emit("updated_queue")
     }
     const getCurrentQuestion = () : Question => {
         return queue[0]
     }
+    const moveQuestionDown = (question : Question) => {
+        const index = queue.findIndex(q => q === question)
+        if(index < queue.length - 1){
+            queue[index] = queue[index + 1]
+            queue[index + 1] = question
+            emit("updated_queue")
+        }
+    }
+    const moveQuestionUp = (question : Question) => {   
+        const index = queue.findIndex(q => q === question)
+        if(index > 0){
+            queue[index] = queue[index - 1]
+            queue[index - 1] = question
+            emit("updated_queue")
+        }
+    }
 
-    const result = {getQuestions,addQuestion,deleteQuestion,getCurrentQuestion}
+    const result = {getQuestions,addQuestion,deleteQuestion,getCurrentQuestion,moveQuestionDown,moveQuestionUp};
     return result;
 }

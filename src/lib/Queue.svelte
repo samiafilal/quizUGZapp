@@ -23,9 +23,25 @@
     questions = [...questions, ...queue.getQuestions(questions.length,1)];
   }
 
+  function moveQuestionUp(question: Question) {
+    queue.moveQuestionUp(question);
+    const index = questions.findIndex(q => q === question)
+    if (index > 0) {
+      questions[index] = questions[index-1];
+      questions[index-1] = question;
+    }
+  }
+  function moveQuestionDown(question: Question) {
+    queue.moveQuestionDown(question);
+    const index = questions.findIndex(q => q === question)
+    if (index < questions.length - 1) {
+      questions[index] = questions[index+1];
+      questions[index+1] = question;
+    }
+  }
   
 
-  let scrollTimer: number | undefined;
+  let scrollTimer: NodeJS.Timeout | undefined;
   function handleScroll() {
     if (container.scrollTop + container.clientHeight >= container.scrollHeight) {
       if (scrollTimer) {
@@ -139,13 +155,23 @@
 
 <div class="container" bind:this={container}>
   <div class="question-list">
-    {#each questions as question}
+    {#each questions as question, idx}
       <div class="question-item">
         <div class="info">
           <span class="difficulty-dot-{question.difficulty.toString()}"><i class="fa fa-circle"></i></span>
           {question.question}
         </div>
         <div class="actions">
+          {#if idx === 0}
+            <button disabled><i class="fa fa-arrow-up"></i></button>
+          {:else}
+            <button on:click={() => {moveQuestionUp(question)}}><i class="fa fa-arrow-up"></i></button>
+          {/if}
+          {#if idx === questions.length - 1}
+            <button disabled><i class="fa fa-arrow-down"></i></button>
+          {:else}
+            <button on:click={() => {moveQuestionDown(question)}}><i class="fa fa-arrow-down"></i></button>
+          {/if}
           <button on:click={() => {deleteQuestion(question)}}><i class="fa fa-trash"></i></button>
         </div>
       </div>

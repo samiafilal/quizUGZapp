@@ -19,21 +19,18 @@
     emit("tab_bar_previous");
   }
 
-  listen("question_added_to_queue", (event) => {
-    const question : Question | undefined = queue.getCurrentQuestion();
-    console.log(question)
-    currentQuestion = (question && question.question) ?? "";
-    currentCategory = (question && question.category) ?? "";
-    currentDifficulty = (question && question.difficulty) ?? -1;
+  listen("updated_queue", (event) => {
+    getCurrentQuestion();
   });
 
-  listen("question_deleted_from_queue", (event) => {
+
+  const getCurrentQuestion = () => {
     const question : Question | undefined = queue.getCurrentQuestion();
     console.log(question)
     currentQuestion = (question && question.question) ?? "";
     currentCategory = (question && question.category) ?? "";
     currentDifficulty = (question && question.difficulty) ?? -1;
-  });
+  }
 
   onMount(() => {
     queue = getQueue();
