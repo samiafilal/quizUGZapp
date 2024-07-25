@@ -8,7 +8,8 @@ export type Question = {
     correct_answer: number,
     category : string,
     difficulty : number,
-    favorite : number
+    favorite : number,
+    time : number
 }
 
 export type Player = {

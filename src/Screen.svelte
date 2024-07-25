@@ -8,10 +8,14 @@
     import getGame from './game';
     export let master : boolean = false;
     let game : Game;
-
+    let errorMessage = ''
     onMount(async () => {
-        game =  await getGame(master);
-        phase = await game.getPhase();
+        getGame(master).then(async g => {
+            game = g;
+            phase = game.getPhase();
+        }).catch((e) => {
+            errorMessage = e;
+        });
     });
 
     listen('phase_updated', async (event) => {
@@ -23,11 +27,17 @@
 </script>
 
 <main class="container">
-    {#if phase == 0}
-	    <Welcome/>
-    {:else if phase == 1}
-        <CreateTeam/>
+    {#if errorMessage}
+        <h1>{errorMessage}</h1>
+    {:else}
+        {#if phase == 0}
+	        <Welcome/>
+        {:else if phase == 1}
+            <CreateTeam/>
+        {/if}
     {/if}
+
+    
 </main>
 
 <style>
