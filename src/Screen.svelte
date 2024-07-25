@@ -4,7 +4,7 @@
     import { onMount } from 'svelte';
     import CreateTeam from './lib/CreateTeam.svelte';
     import Welcome from './lib/Welcome.svelte';
-    import type { Game } from './types';
+    import type { Game, Team } from './types';
     import getGame from './game';
     export let master : boolean = false;
     const baseURL = "https://quizugz.fr";
@@ -12,11 +12,13 @@
     let phase : number;
     let errorMessage = '';
     let createTeamURL = '';
+    let teams : Team[];
     onMount(async () => {
         getGame(master).then(async g => {
             game = g;
             createTeamURL = await game.getAddTeamURL();
             phase = await game.getPhase();
+            teams = await game.getTeams();
         }).catch((e) => {
             errorMessage = e;
         });
@@ -24,6 +26,11 @@
 
     listen('phase_updated', async (event) => {
         phase = await game.getPhase();
+    });
+
+    listen('updated_players', async (event) => {
+        teams = await game.getTeams()
+        console.table(teams);
     });
     
 
@@ -36,7 +43,7 @@
         {#if phase == 0}
 	        <Welcome/>
         {:else if phase == 1}
-            <CreateTeam url={baseURL+createTeamURL}/>
+            <CreateTeam url={baseURL+createTeamURL} teams={teams}/>
         {/if}
     {/if}
 

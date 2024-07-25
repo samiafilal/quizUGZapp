@@ -1,9 +1,8 @@
 <script lang="ts">
-    import { onMount } from "svelte";
   import {QRCodeImage} from "svelte-qrcode-image"
-  import type { Game } from "../types";
+  import type { Team } from "../types";
   export let url : string;
-  
+  export let teams : Team[];
 </script>
 
 <style>
@@ -18,6 +17,17 @@
 </style>
 
 <div class="container">
-    <h1>Créez votre équipe  </h1>
+    {#if teams}
+        <table>
+            {#each teams as team}
+              <tr>
+                <td><h2>{team.name}</h2></td>
+                {#each team.players as player}
+                <td><h3>{player.name}</h3></td>
+                {/each}
+              </tr>
+            {/each}
+        </table>
+    {/if}
     <QRCodeImage text={url} width={300}  />
 </div>

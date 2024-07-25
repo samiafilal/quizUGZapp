@@ -13,20 +13,27 @@ export type Question = {
 }
 
 export type Player = {
-    id : number,
     name : string,
     score : number
 }
 
+export type ServerPlayer = {
+    name : string,
+}
+
 export type Team = {    
-    id : number,
     name : string,
     score : number,
     players : Player[]
 }
 
+export type ServerTeam = {
+    name : string,
+    players : ServerPlayer[]
+}
+
 export type Game = {
-    getTeams : () => Team[],
+    getTeams : () => Promise<Team[]>,
     getPhase : () => Promise<number>,
     getAddTeamURL : () => Promise<string>,
 }

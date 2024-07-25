@@ -13,6 +13,9 @@ struct Phase {
 struct AddTeamURL {
     add_team_url: Mutex<String>,
 }
+struct GameState {
+    game_state: Mutex<String>,
+}
 use tauri::State;
 
 
@@ -46,7 +49,18 @@ fn add_team_url(method: &str, url: &str, state: State<AddTeamURL>) -> String {
     (*add_team_url).clone()
 }
 
-
+#[tauri::command]
+fn game_state(method: &str, game: &str, state: State<GameState>) -> String {
+    let mut game_state = state.game_state.lock().unwrap();
+    match method {
+        "get" => (),
+        "set" => {
+            *game_state = (*game).to_string();
+        },
+        _ => ()
+    }
+    (*game_state).clone()
+}
 
 
 
@@ -74,9 +88,10 @@ fn main(){
     tauri::Builder::default()
         .manage(Phase { phase: Mutex::new(0) })
         .manage(AddTeamURL { add_team_url: Mutex::new("".to_string()) })
+        .manage(GameState { game_state: Mutex::new("[]".to_string()) })
         .plugin(tauri_plugin_sql::Builder::default().build())
         .plugin(tauri_plugin_websocket::init())
-        .invoke_handler(tauri::generate_handler![create_db_if_no_db,phase,add_team_url])
+        .invoke_handler(tauri::generate_handler![create_db_if_no_db,phase,add_team_url,game_state])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
