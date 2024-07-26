@@ -46,10 +46,10 @@ async function updateQuestion(question : Question){
     if(question){
         await invoke("question", { method: "set", currentQuestion: JSON.stringify(question)});
         const partialQuestion = {...question};
-        partialQuestion.answer1 = phase < 2 ? "?" : question.answer1;
-        partialQuestion.answer2 = phase < 3 ? "?" : question.answer2;
-        partialQuestion.answer3 = phase < 4 ? "?" : question.answer3;
-        partialQuestion.answer4 = phase < 5 ? "?" : question.answer4;    
+        partialQuestion.answer1 = phase < 3 ? "?" : question.answer1;
+        partialQuestion.answer2 = phase < 4 ? "?" : question.answer2;
+        partialQuestion.answer3 = phase < 5 ? "?" : question.answer3;
+        partialQuestion.answer4 = phase < 6 ? "?" : question.answer4;    
         const serverQuestion = {
             question: partialQuestion.question,
             answer1: partialQuestion.answer1,
@@ -77,23 +77,42 @@ export default async function getGame(master: boolean): Promise<Game> {
             if(phase === 0 && !createTeamURL){
                 return;
             }
+            if(phase === 0){
+                phase = await invoke("phase", { method: "increment" });
+                emit('phase_updated');
+                return;
+            }
             if(phase >= 1 && phase <= 6){
                 const question = queue.getCurrentQuestion();
                 if(question){
+                    phase = await invoke("phase", { method: "increment" });
                     await updateQuestion(question);
+                    emit('phase_updated');
                 }
                 else{
                     console.log("No question in queue");
                     return;
                 }
             }
-            phase = await invoke("phase", { method: "increment" });
-            emit('phase_updated');
+            
         });
         
         listen('tab_bar_previous', async (event) => {
-            phase = await invoke("phase", { method: "decrement" });
-            emit('phase_updated');
+            if(phase === 2){
+                return;
+            }
+            if(phase >= 3 && phase <= 7){
+                const question = queue.getCurrentQuestion();
+                if(question){
+                    phase = await invoke("phase", { method: "decrement" });
+                    await updateQuestion(question);
+                    emit('phase_updated');
+                }
+                else{
+                    console.log("No question in queue");
+                    return;
+                }
+            }
         });
     }
     const startGame = async (): Promise<string> => {
