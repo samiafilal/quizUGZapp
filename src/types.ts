@@ -12,6 +12,18 @@ export type Question = {
     time : number
 }
 
+export type ServerQuestion = {
+    question: string,
+    answer1: string,
+    answer2: string,
+    answer3: string,
+    answer4: string,
+    correct_answer: number,
+    category : string,
+    difficulty : number,
+    time : number
+}
+
 export type Player = {
     name : string,
     score : number
@@ -36,6 +48,7 @@ export type Game = {
     getTeams : () => Promise<Team[]>,
     getPhase : () => Promise<number>,
     getAddTeamURL : () => Promise<string>,
+    getQuestion : () => Promise<Question | undefined>,
 }
 
 export type DB = {

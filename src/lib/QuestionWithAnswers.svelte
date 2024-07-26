@@ -1,37 +1,20 @@
 <script lang="ts">
     import { listen } from '@tauri-apps/api/event';
-
-    let question: string = "Quel est le plus grand désert du monde ?";
-    let answers: string[] = [
-        "Le désert du Sahara",
-        "Le désert de Gobi",
-        "Le désert d'Antarctique",
-        "Le désert d'Arabie"
-    ];
-
-    // Declare the type of the payload
-    type QuestionWithAnswers = {
-        question: string;
-        answers: string[];
-    };
-
-    listen('updateScreen', (event) => {
-        const payload = event.payload as QuestionWithAnswers;
-        question = payload.question;
-        answers = payload.answers;
-    });
+    import type { Question } from '../types';
+    export let phase: number;
+    export let question : Question | undefined;
 </script>
 
 <main class="container"> 
     <div class="questionWithAnswers">
-        <div class="question">{question || " "}</div>
+        <div class="question">{question && question.question}</div>
         <div class="flexRow">
-            <div class="answer">{"A - "+answers[0]}</div>
-            <div class="answer">{"B -"+answers[1]}</div>
+            <div class="answer">{question && question.answer1}</div>
+            <div class="answer">{question && question.answer2}</div>
         </div>
         <div class="flexRow">
-            <div class="answer">{"C -"+answers[2]}</div>
-            <div class="answer">{"D  -"+(answers[3])}</div>
+            <div class="answer">{question && question.answer3}</div>
+            <div class="answer">{question && question.answer4}</div>
         </div>
     </div>
 </main>

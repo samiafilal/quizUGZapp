@@ -1,18 +1,24 @@
-import type { Team, Game, ServerPlayer, ServerTeam } from "./types";
+import type { Team, Game, ServerPlayer, ServerTeam, Question, Queue } from "./types";
 import { emit } from '@tauri-apps/api/event';
 import { listen } from '@tauri-apps/api/event';
 import { invoke } from '@tauri-apps/api/tauri';
 import WebSocket from "tauri-plugin-websocket-api";
-
+import getQueue from "./queue";
 let ws: WebSocket | void;
 let phase: number;
 let createTeamURL: string;
 let teams: Team[] = [];
+let currentQuestion: Question | undefined;
+let queue: Queue;
+
 import { getClient, ResponseType } from '@tauri-apps/api/http';
 
 function playerExists(team: Team, playerName: string): boolean {
     return team.players.map(p => p.name).includes(playerName);
 }
+
+    
+
 
 async function processMsg(msg: any) {
     if(msg.event){
@@ -37,8 +43,34 @@ async function processMsg(msg: any) {
 }
 
 export default async function getGame(master: boolean): Promise<Game> {
+    queue = getQueue();
     if(master) {
         listen('tab_bar_next', async (event) => {
+            if(phase === 0 && !createTeamURL){
+                return;
+            }
+            if(phase >= 1){
+                const question = queue.getCurrentQuestion();
+                if(question){
+                    await invoke("question", { method: "set", currentQuestion: JSON.stringify(question)});
+                    const serverQuestion = {
+                        question: question.question,
+                        answer1: question.answer1,
+                        answer2: question.answer2,
+                        answer3: question.answer3,
+                        answer4: question.answer4,
+                        correct_answer: question.correct_answer,
+                        category : question.category,
+                        difficulty : question.difficulty,
+                        time : question.time
+                    }
+                    ws && ws.send(JSON.stringify({event : "update_question", question : serverQuestion}));
+                    emit('question_updated');
+                }else{
+                    console.log("No question in queue");
+                    return;
+                }
+            }
             phase = await invoke("phase", { method: "increment" });
             emit('phase_updated');
         });
@@ -72,6 +104,7 @@ export default async function getGame(master: boolean): Promise<Game> {
             console.table(msg);
             processMsg(answer);
         });
+        
     }
     if(master && !createTeamURL) {
         createTeamURL = await startGame();
@@ -81,6 +114,12 @@ export default async function getGame(master: boolean): Promise<Game> {
         teams = await invoke("game_state", { method: "get", game: ""}).then((teams) => JSON.parse(teams as string)).catch((e) => console.log(e));
         console.log("Teams:", teams);
         return teams;
+    }
+
+    const getQuestion = async (): Promise<Question | undefined> => {
+        currentQuestion = await invoke("question", { method: "get", currentQuestion: ""}).then((question) => JSON.parse(question as string)).catch((e) => console.log(e));
+        console.log("Question:", currentQuestion);
+        return currentQuestion;
     }
 
     const getPhase = async (): Promise<number> => {
@@ -93,6 +132,6 @@ export default async function getGame(master: boolean): Promise<Game> {
         return createTeamURL;
     }
 
-    const result = { getTeams, getPhase, getAddTeamURL };
+    const result = { getTeams, getPhase, getAddTeamURL, getQuestion };
     return result;
 }
