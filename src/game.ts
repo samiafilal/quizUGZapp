@@ -42,6 +42,34 @@ async function processMsg(msg: any) {
     }
 }
 
+async function updateQuestion(question : Question){
+    if(question){
+        await invoke("question", { method: "set", currentQuestion: JSON.stringify(question)});
+        const partialQuestion = {...question};
+        partialQuestion.answer1 = phase < 2 ? "?" : question.answer1;
+        partialQuestion.answer2 = phase < 3 ? "?" : question.answer2;
+        partialQuestion.answer3 = phase < 4 ? "?" : question.answer3;
+        partialQuestion.answer4 = phase < 5 ? "?" : question.answer4;    
+        const serverQuestion = {
+            question: partialQuestion.question,
+            answer1: partialQuestion.answer1,
+            answer2: partialQuestion.answer2,
+            answer3: partialQuestion.answer3,
+            answer4: partialQuestion.answer4,
+            correct_answer: partialQuestion.correct_answer,
+            category : partialQuestion.category,
+            difficulty : partialQuestion.difficulty,
+            time : partialQuestion.time
+        }
+        ws && ws.send(JSON.stringify({event : "update_question", question : serverQuestion}));
+        emit('question_updated');
+    }else{
+        console.log("No question in queue");
+        return;
+    }
+}
+
+
 export default async function getGame(master: boolean): Promise<Game> {
     queue = getQueue();
     if(master) {
@@ -49,24 +77,12 @@ export default async function getGame(master: boolean): Promise<Game> {
             if(phase === 0 && !createTeamURL){
                 return;
             }
-            if(phase >= 1){
+            if(phase >= 1 && phase <= 6){
                 const question = queue.getCurrentQuestion();
                 if(question){
-                    await invoke("question", { method: "set", currentQuestion: JSON.stringify(question)});
-                    const serverQuestion = {
-                        question: question.question,
-                        answer1: question.answer1,
-                        answer2: question.answer2,
-                        answer3: question.answer3,
-                        answer4: question.answer4,
-                        correct_answer: question.correct_answer,
-                        category : question.category,
-                        difficulty : question.difficulty,
-                        time : question.time
-                    }
-                    ws && ws.send(JSON.stringify({event : "update_question", question : serverQuestion}));
-                    emit('question_updated');
-                }else{
+                    await updateQuestion(question);
+                }
+                else{
                     console.log("No question in queue");
                     return;
                 }

@@ -6,30 +6,31 @@
 </script>
 
 <main class="container"> 
+    {#if question}
     <div class="questionWithAnswers">
         <div class="question">{question && question.question}</div>
         <div class="flexRow">
-            <div class="answer">{question && question.answer1}</div>
-            <div class="answer">{question && question.answer2}</div>
+            <div class='answer'>{phase >= 3 ? question.answer1 : "?"}</div> 
+            <div class='answer'>{phase >= 4 ? question.answer2 : "?"}</div> 
         </div>
         <div class="flexRow">
-            <div class="answer">{question && question.answer3}</div>
-            <div class="answer">{question && question.answer4}</div>
+            <div class='answer'>{phase >= 5 ? question.answer3 : "?"}</div> 
+            <div class='answer'>{phase >= 6 ? question.answer4 : "?"}</div> 
         </div>
     </div>
+    {/if}
 </main>
 
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
 
-    /* Définition des couleurs */
     :root {
-        --primary-color: #1a252f; /* Couleur principale (bleu très foncé) */
-        --secondary-color: #34495e; /* Couleur secondaire (bleu foncé) */
-        --accent-color: #27ae60; /* Couleur d'accentuation (vert foncé) */
-        --hover-color: #2980b9; /* Couleur au survol (bleu foncé) */
-        --background-gradient-start: #422c50; /* Dégradé de fond début */
-        --background-gradient-end: #4a6073; /* Dégradé de fond fin */
+        --primary-color: #1a252f; /* Main color (dark blue) */
+        --secondary-color: #34495e; /* Secondary color (dark blue) */
+        --accent-color: #27ae60; /* Accent color (dark green) */
+        --hover-color: #2980b9; /* Hover color (dark blue) */
+        --background-gradient-start: #422c50; /* Gradient start color */
+        --background-gradient-end: #4a6073; /* Gradient end color */
     }
 
     .container {
@@ -41,7 +42,8 @@
         height: 100%;
         margin: auto;
         padding: 0;
-        font-family: 'Montserrat', sans-serif; /* Choix de police */
+        font-family: 'Montserrat', sans-serif; /* Font choice */
+        background: linear-gradient(90deg, var(--background-gradient-start), var(--background-gradient-end));
     }
 
     .questionWithAnswers {
@@ -51,56 +53,60 @@
         align-items: center;
         justify-content: center;
         width: 60%;
-        height: auto;
         padding: 2vh;
-        background-color: #1a252f;
-        box-shadow: 0 0 2vh rgba(0, 0, 0, 0.1);
-        animation: fadeIn 1s ease-in-out; /* Animation d'apparition */
-        overflow: hidden; /* Ajouté pour masquer le pseudo-élément débordant */
+        background-color: rgba(0, 0, 0, 0);
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        border-radius: 15px;
+        animation: fadeIn 1s ease-in-out; /* Fade-in animation */
+        overflow: hidden; /* Hide overflow */
     }
-
-    
 
     .question {
         white-space: pre-wrap;
-        color: #ffffff; /* Texte blanc */
+        color: #ffffff; /* White text */
         width: 100%;
-        padding: 1.5vh;
-        border: 0.1vh solid var(--primary-color);
-        border-radius: 1vw;
-        font-size: 1.45vw;
+        padding: 2vh;
+        border-radius: 10px;
+        font-size: 3vh;
         text-align: center;
-        background-color: var(--secondary-color);
-        transition: background-color 0.3s ease; /* Transition pour l'effet dynamique */
+        background-color: rgba(0, 0, 0, 0);
+        transition: background-color 0.3s ease; /* Background color transition */
     }
-
-   
 
     .flexRow {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         width: 100%;
+        margin-top: 2vh;
     }
 
-    .answer {
-        color: #ffffff; /* Texte blanc */
+    .answer, .emptyAnswer {
+        color: #ffffff; /* White text */
         width: 48%;
-        padding: 1.5vh;
-        border: 0.1vh solid var(--primary-color);
-        border-radius: 1vw;
+        padding: 2vh;
         text-align: center;
-        background-color: var(--secondary-color);
-        transition: background-color 0.3s ease, transform 0.3s ease; /* Transition pour l'effet dynamique */
-        font-size: 1.45vw;
+        background-color: transparent;
+        border-radius: 10px;
+        font-size: 3vh;
+        transition: background-color 0.3s ease, transform 0.3s ease; /* Background color and transform transition */
+        cursor: pointer;
     }
 
+    .answer:hover {
+        background-color: var(--hover-color);
+        transform: scale(1.05);
+    }
 
-    /* Animation d'apparition */
+    .emptyAnswer {
+        color: var(--primary-color);
+    }
+
+    /* Fade-in animation */
     @keyframes fadeIn {
         from {
             opacity: 0;
-            transform: translateY(-1vh);
+            transform: translateY(-20px);
         }
         to {
             opacity: 1;

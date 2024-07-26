@@ -21,6 +21,7 @@
             createTeamURL = await game.getAddTeamURL();
             phase = await game.getPhase();
             teams = await game.getTeams();
+            question = await game.getQuestion();
         }).catch((e) => {
             errorMessage = e;
         });
@@ -50,7 +51,7 @@
 	        <Welcome/>
         {:else if phase == 1}
             <CreateTeam url={baseURL+createTeamURL} teams={teams}/>
-        {:else if phase > 1}
+        {:else if phase >= 2}
             <QuestionWithAnswers phase={phase} question={question}/>
         {/if}
     {/if}
