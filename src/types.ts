@@ -49,6 +49,7 @@ export type Game = {
     getPhase : () => Promise<number>,
     getAddTeamURL : () => Promise<string>,
     getQuestion : () => Promise<Question | undefined>,
+    isTimerPaused : () => Promise<boolean>,
 }
 
 export type DB = {

@@ -3,11 +3,17 @@
     import type { Question } from '../types';
     export let phase: number;
     export let question : Question | undefined;
+    let countdown = -1;
+    listen('timer_updated', async (event) => {
+        countdown = event.payload as number;
+    });
 </script>
 
 <main class="container"> 
+    
     {#if question}
     <div class="questionWithAnswers">
+        
         <div class="question">{question && question.question}</div>
         <div class="flexRow">
             <div class='answer'>{phase >= 3 ? question.answer1 : "?"}</div> 
@@ -17,6 +23,9 @@
             <div class='answer'>{phase >= 5 ? question.answer3 : "?"}</div> 
             <div class='answer'>{phase >= 6 ? question.answer4 : "?"}</div> 
         </div>
+        {#if phase === 7 && countdown >= 0}
+            <div class="question">{countdown}</div>
+        {/if}
     </div>
     {/if}
 </main>

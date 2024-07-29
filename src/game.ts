@@ -10,14 +10,57 @@ let createTeamURL: string;
 let teams: Team[] = [];
 let currentQuestion: Question | undefined;
 let queue: Queue;
-
+let timeLeft : number;
+let timerPaused : boolean = false;
+let timer : NodeJS.Timeout;
 import { getClient, ResponseType } from '@tauri-apps/api/http';
 
 function playerExists(team: Team, playerName: string): boolean {
     return team.players.map(p => p.name).includes(playerName);
 }
 
-    
+function launchTimer(time: number) {
+    timeLeft = time;
+    emit('timer_updated', timeLeft);
+    timer = setInterval(() => {
+        if(!timerPaused){
+            timeLeft--;
+            updateCountdown();
+            emit('timer_updated', timeLeft);
+        }
+        if(timeLeft == 0){
+            updateCountdown();
+            clearInterval(timer);
+        }
+    }, 1000);
+}
+
+function pauseTimer(){
+    timerPaused = true;
+    emit('timer_paused');
+}
+
+function resumeTimer(){
+    timerPaused = false;
+    emit('timer_resumed');
+}
+
+function resetTimer(time : number){
+    timerPaused = false;
+    timeLeft = time;
+    updateCountdown();
+    emit('timer_resumed');
+    emit('timer_updated',timeLeft);
+}
+
+function stopTimer(){
+    timerPaused = false;
+    timeLeft = -1;
+    emit('timer_updated',timeLeft);
+    clearInterval(timer);
+}
+
+
 
 
 async function processMsg(msg: any) {
@@ -40,6 +83,10 @@ async function processMsg(msg: any) {
             return;
         }
     }
+}
+
+function updateCountdown(){
+    ws && ws.send(JSON.stringify({event : "update_countdown", countdown : timeLeft}))
 }
 
 async function updateQuestion(question : Question){
@@ -82,17 +129,22 @@ export default async function getGame(master: boolean): Promise<Game> {
                 emit('phase_updated');
                 return;
             }
-            if(phase >= 1 && phase <= 6){
+            if(phase >= 1 && phase <= 5){
                 const question = queue.getCurrentQuestion();
                 if(question){
                     phase = await invoke("phase", { method: "increment" });
                     await updateQuestion(question);
                     emit('phase_updated');
-                }
-                else{
-                    console.log("No question in queue");
                     return;
                 }
+                console.log("No question in queue");
+                return;
+            }
+            if(phase === 6){
+                launchTimer(currentQuestion?.time || 30);
+                phase = await invoke("phase", { method: "increment" });
+                emit('phase_updated');
+                return;
             }
             
         });
@@ -101,18 +153,27 @@ export default async function getGame(master: boolean): Promise<Game> {
             if(phase === 2){
                 return;
             }
-            if(phase >= 3 && phase <= 7){
-                const question = queue.getCurrentQuestion();
-                if(question){
+            if(phase >= 3 && phase <= 6){
                     phase = await invoke("phase", { method: "decrement" });
-                    await updateQuestion(question);
                     emit('phase_updated');
-                }
-                else{
-                    console.log("No question in queue");
-                    return;
-                }
             }
+            if(phase == 7){
+                stopTimer();
+                phase = await invoke("phase", { method: "decrement" });
+                emit('phase_updated');
+            }
+        });
+
+        listen('tab_bar_reset', async (event) => {
+            phase == 7 && resetTimer(currentQuestion?.time || 30);
+        });
+
+        listen('tab_bar_pause', async (event) => {
+            phase == 7 && pauseTimer();
+        });
+
+        listen('tab_bar_resume', async (event) => {
+            phase == 7 && resumeTimer();
         });
     }
     const startGame = async (): Promise<string> => {
@@ -167,6 +228,10 @@ export default async function getGame(master: boolean): Promise<Game> {
         return createTeamURL;
     }
 
-    const result = { getTeams, getPhase, getAddTeamURL, getQuestion };
+    const isTimerPaused = () : boolean => {
+        return timerPaused;
+    }
+
+    const result = { getTeams, getPhase, getAddTeamURL, getQuestion, isTimerPaused };
     return result;
 }

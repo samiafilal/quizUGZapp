@@ -4,12 +4,15 @@
   import getQueue from '../queue';
   import { listen } from '@tauri-apps/api/event';
   import { emit } from '@tauri-apps/api/event'
-
+  import type { Game } from '../types';
+  import getGame from '../game';
   let queue: Queue;
   let currentQuestion = "";
   let currentDifficulty = -1;
   let currentCategory = "";
-
+  let phase = 0;
+  let game: Game;
+  let paused = false;
 
   function next() {
     emit("tab_bar_next");
@@ -19,9 +22,44 @@
     emit("tab_bar_previous");
   }
 
+  function pause() {
+    emit("tab_bar_pause");
+  }
+
+  function resume() {
+    emit("tab_bar_resume");
+  }
+
+  function reset() {
+    emit("tab_bar_reset");
+  }
+
   listen("updated_queue", (event) => {
     getCurrentQuestion();
   });
+
+  listen("timer_paused", (event) => {
+    paused = game.isTimerPaused();
+  });
+
+  listen("timer_resumed", (event) => {
+    paused = game.isTimerPaused();
+  });
+
+  onMount(async () => {
+      queue = getQueue();
+        getGame(false).then(async g => {
+            game = g;
+            phase = await game.getPhase();
+            paused = game.isTimerPaused();
+        }).catch((e) => {
+            console.error(e);
+        });
+    });
+
+    listen('phase_updated', async (event) => {
+        phase = game && await game.getPhase();
+    });
 
 
   const getCurrentQuestion = () => {
@@ -32,9 +70,6 @@
     currentDifficulty = (question && question.difficulty) ?? -1;
   }
 
-  onMount(() => {
-    queue = getQueue();
-  });
 
 </script>
 
@@ -85,6 +120,7 @@
     font-size: 1.5rem;
     margin-right: 1rem;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    width : 3rem;
   }
 
   .controls button:hover {
@@ -130,7 +166,14 @@
 <div class="tab-bar">
   <div class="controls">
     <button on:click={previous}><i class="fa fa-arrow-left"></i></button>
+    {#if phase === 7 && paused}
+      <button on:click={resume}><i class="fa fa-play"></i></button>
+    {:else}
+      <button on:click={pause}><i class="fa fa-pause"></i></button>
+    {/if}
+    <button on:click={reset}><i class="fa fa-backward-step"></i></button>
     <button on:click={next}><i class="fa fa-arrow-right"></i></button>
+
   </div>
   <div class="current-question">
     {#if currentDifficulty != -1}
