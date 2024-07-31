@@ -60,7 +60,52 @@ function stopTimer(){
     clearInterval(timer);
 }
 
+function timesUp(){
+    ws && ws.send(JSON.stringify({event : "times_up"}));
+}
 
+function isAnswerCorrect(answer: string){
+    if(!currentQuestion) return false;
+    const translationTab = ["A", "B", "C", "D"];
+    return translationTab[currentQuestion.correct_answer] === answer;
+}
+
+
+function updatePlayersScores(distantState : {team_name : string, players : {name : string, answer : string}[]}[]){
+    distantState.forEach((distantTeam: {team_name : string, players : {name : string, answer : string}[]}) => {
+        const teamIndex = teams.findIndex(t => t.name === distantTeam.team_name);
+        console.log("Team index",teamIndex)
+        if(teamIndex === -1) return;
+        distantTeam.players.forEach((player: {name : string, answer : string}) => {
+            const playerIndex = teams[teamIndex].players.findIndex(p => p.name === player.name);
+            console.log("Player index",playerIndex)
+            if(playerIndex === -1) return;
+            if(currentQuestion && isAnswerCorrect(player.answer)){
+                teams[teamIndex].players[playerIndex].score += (currentQuestion.difficulty  + 1);
+            }
+        });
+    });
+    console.log(teams)
+}
+
+function updateTeamsScores(distantState : {team_name : string, players : {name : string, answer : string}[]}[]){
+    distantState.forEach((distantTeam: {team_name : string, players : {name : string, answer : string}[]}) => {
+        const teamIndex = teams.findIndex(t => t.name === distantTeam.team_name);
+        if(teamIndex === -1) return;
+        let correctAnswers = 0;
+        distantTeam.players.forEach((player: {name : string, answer : string}) => {
+            const playerIndex = teams[teamIndex].players.findIndex(p => p.name === player.name);
+            if(playerIndex === -1) return;
+            if(isAnswerCorrect(player.answer)){
+                correctAnswers += 1;
+            }
+        });
+        if(currentQuestion && correctAnswers > distantTeam.players.length / 2){
+            teams[teamIndex].score += (currentQuestion.difficulty  + 1);
+        }
+    });
+    console.log(teams)
+}
 
 
 async function processMsg(msg: any) {
@@ -81,6 +126,15 @@ async function processMsg(msg: any) {
             await invoke("game_state", { method: "set", game : JSON.stringify(teams)});
             emit('updated_players');
             return;
+        }
+        if(msg.event === "players_answers"){
+            console.log("Players answers received",msg.teams);
+            updatePlayersScores(msg.teams);
+            updateTeamsScores(msg.teams);
+            console.log(JSON.stringify(teams))
+            await invoke("game_state", { method: "set", game : JSON.stringify(teams)});
+            emit('updated_players');
+            return 
         }
     }
 }
@@ -142,6 +196,12 @@ export default async function getGame(master: boolean): Promise<Game> {
             }
             if(phase === 6){
                 launchTimer(currentQuestion?.time || 30);
+                phase = await invoke("phase", { method: "increment" });
+                emit('phase_updated');
+                return;
+            }
+            if(phase === 7){
+                timesUp();
                 phase = await invoke("phase", { method: "increment" });
                 emit('phase_updated');
                 return;

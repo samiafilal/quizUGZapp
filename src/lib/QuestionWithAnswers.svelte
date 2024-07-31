@@ -90,7 +90,7 @@
         margin-top: 2vh;
     }
 
-    .answer, .emptyAnswer {
+    .answer {
         color: #ffffff; /* White text */
         width: 48%;
         padding: 2vh;
@@ -107,9 +107,7 @@
         transform: scale(1.05);
     }
 
-    .emptyAnswer {
-        color: var(--primary-color);
-    }
+   
 
     /* Fade-in animation */
     @keyframes fadeIn {

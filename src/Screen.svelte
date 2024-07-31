@@ -4,6 +4,7 @@
     import { onMount } from 'svelte';
     import CreateTeam from './lib/CreateTeam.svelte';
     import Welcome from './lib/Welcome.svelte';
+    import Scores from './lib/Scores.svelte';
     import type { Game, Question, Team } from './types';
     import getGame from './game';
     export let master : boolean = false;
@@ -51,8 +52,10 @@
 	        <Welcome/>
         {:else if phase == 1}
             <CreateTeam url={baseURL+createTeamURL} teams={teams}/>
-        {:else if phase >= 2}
+        {:else if phase >= 2 && phase <= 7}
             <QuestionWithAnswers phase={phase} question={question}/>
+        {:else if phase == 8}
+            <Scores teams={teams}/>
         {/if}
     {/if}
 
