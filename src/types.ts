@@ -66,4 +66,5 @@ export type Queue = {
     moveQuestionDown: (question: Question) => void; 
     deleteQuestion: (question: Question) => void;
     getCurrentQuestion: () => Question | undefined;
+    nextQuestion: () => boolean;
 };

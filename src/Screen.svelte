@@ -52,9 +52,9 @@
 	        <Welcome/>
         {:else if phase == 1}
             <CreateTeam url={baseURL+createTeamURL} teams={teams}/>
-        {:else if phase >= 2 && phase <= 7}
+        {:else if phase >= 2 && phase <= 8}
             <QuestionWithAnswers phase={phase} question={question}/>
-        {:else if phase == 8}
+        {:else if phase == 9}
             <Scores teams={teams}/>
         {/if}
     {/if}

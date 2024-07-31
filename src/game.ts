@@ -202,8 +202,27 @@ export default async function getGame(master: boolean): Promise<Game> {
             }
             if(phase === 7){
                 timesUp();
+                stopTimer();
                 phase = await invoke("phase", { method: "increment" });
                 emit('phase_updated');
+                return;
+            }
+            if(phase === 8){
+                phase = await invoke("phase", { method: "increment" });
+                emit('phase_updated');
+                return;
+            }
+            if(phase === 9){
+                if(queue.nextQuestion()){
+                    const question = queue.getCurrentQuestion();
+                    if(question){
+                        phase = await invoke("phase", { method: "next_question" });
+                        await updateQuestion(question);
+                        emit('phase_updated');
+                        return;
+                    }
+                }
+                console.log("No question left in queue");
                 return;
             }
             
@@ -214,8 +233,15 @@ export default async function getGame(master: boolean): Promise<Game> {
                 return;
             }
             if(phase >= 3 && phase <= 6){
+                const question = queue.getCurrentQuestion();
+                if(question){
                     phase = await invoke("phase", { method: "decrement" });
+                    await updateQuestion(question);
                     emit('phase_updated');
+                    return;
+                }
+                console.log("No question in queue");
+                return;
             }
             if(phase == 7){
                 stopTimer();
@@ -239,7 +265,7 @@ export default async function getGame(master: boolean): Promise<Game> {
     const startGame = async (): Promise<string> => {
         try {
             const client = await getClient();
-            const url = (await client.get('https://quizugz.fr/start', {
+            const url = (await client.get('https://quizugz.fr/644db8ac52081a90ddbffb8879455884', {
                 responseType: ResponseType.Text,
               })).data as string;
             await invoke("add_team_url", { method: "set", url : url});

@@ -42,6 +42,15 @@ export default function getQueue(){
         }
     }
 
-    const result = {getQuestions,addQuestion,deleteQuestion,getCurrentQuestion,moveQuestionDown,moveQuestionUp};
+    const nextQuestion = () : boolean => {
+        if(queue.length > 1){
+            queue =  queue.slice(1)
+            emit("updated_queue")
+            return true;
+        }
+        return false;
+    }
+
+    const result = {getQuestions,addQuestion,deleteQuestion,getCurrentQuestion,moveQuestionDown,moveQuestionUp,nextQuestion};
     return result;
 }

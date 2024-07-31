@@ -35,6 +35,9 @@ fn phase(method: &str, state: State<Phase>) -> i32 {
         "decrement" => {
             *phase = *phase - 1;
         },
+        "next_question" => {
+            *phase = 2;
+        },
         _ => ()
     }
     *phase

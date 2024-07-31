@@ -12,21 +12,30 @@
 <main class="container"> 
     
     {#if question}
-    <div class="questionWithAnswers">
-        
-        <div class="question">{question && question.question}</div>
-        <div class="flexRow">
-            <div class='answer'>{phase >= 3 ? question.answer1 : "?"}</div> 
-            <div class='answer'>{phase >= 4 ? question.answer2 : "?"}</div> 
+        {#if phase === 8}
+        <div class="questionWithAnswers">
+            <div class="question">{question && question.question}</div>
+            <div class="flexRow">
+                <div class="answer">{[question.answer1,question.answer2,question.answer3,question.answer4][question.correct_answer]}</div> 
+            </div>
         </div>
-        <div class="flexRow">
-            <div class='answer'>{phase >= 5 ? question.answer3 : "?"}</div> 
-            <div class='answer'>{phase >= 6 ? question.answer4 : "?"}</div> 
-        </div>
-        {#if phase === 7 && countdown >= 0}
-            <div class="question">{countdown}</div>
+        {:else}
+            <div class="questionWithAnswers">
+                
+                <div class="question">{question && question.question}</div>
+                <div class="flexRow">
+                    <div class='answer'>{phase >= 3 ? question.answer1 : "?"}</div> 
+                    <div class='answer'>{phase >= 4 ? question.answer2 : "?"}</div> 
+                </div>
+                <div class="flexRow">
+                    <div class='answer'>{phase >= 5 ? question.answer3 : "?"}</div> 
+                    <div class='answer'>{phase >= 6 ? question.answer4 : "?"}</div> 
+                </div>
+                {#if phase === 7 && countdown >= 0}
+                    <div class="question">{countdown}</div>
+                {/if}
+            </div>
         {/if}
-    </div>
     {/if}
 </main>
 
@@ -101,6 +110,7 @@
         transition: background-color 0.3s ease, transform 0.3s ease; /* Background color and transform transition */
         cursor: pointer;
     }
+
 
     .answer:hover {
         background-color: var(--hover-color);
